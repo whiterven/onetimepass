@@ -3,14 +3,13 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CountryCodeSelector } from './CountryCodeSelector';
-import { isValidPhoneNumber, CountryCode } from 'libphonenumber-js'; // Import CountryCode type
-import { Phone, Loader2 } from 'lucide-react';
+import { isValidPhoneNumber, CountryCode } from 'libphonenumber-js';
+import { Phone, Loader2, ShieldCheck, AlertTriangle } from 'lucide-react';
 
 export default function OneCaller() {
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [countryCode, setCountryCode] = useState<CountryCode | ''>(''); // Use CountryCode type
+  const [countryCode, setCountryCode] = useState<CountryCode | ''>('');
   const [callStatus, setCallStatus] = useState('');
   const [otpCode, setOtpCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -93,24 +92,35 @@ export default function OneCaller() {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold">Enter Phone Number</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="flex space-x-2 mb-4">
-          <CountryCodeSelector onSelect={(code) => setCountryCode(code as CountryCode)} />
+    <div className="space-y-6">
+      <div className="flex items-center space-x-4 mb-4">
+        <ShieldCheck className="w-8 h-8 text-cyan-400" />
+        <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-600">
+          OTP Verification
+        </h2>
+      </div>
+
+      <div className="space-y-4">
+        <div className="flex space-x-2">
+          <div className="w-1/3">
+            <CountryCodeSelector 
+              onSelect={(code) => setCountryCode(code as CountryCode)} 
+              className="bg-white/10 backdrop-blur-lg border border-white/20 text-white"
+            />
+          </div>
           <Input
             type="tel"
             placeholder="Enter phone number"
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
+            className="flex-grow bg-white/10 backdrop-blur-lg border border-white/20 text-white placeholder-gray-400 focus:border-cyan-400"
           />
         </div>
+
         <Button 
           onClick={initiateCall} 
           disabled={isLoading || !phoneNumber || !countryCode}
-          className="w-full"
+          className="w-full bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105"
         >
           {isLoading ? (
             <>
@@ -124,18 +134,34 @@ export default function OneCaller() {
             </>
           )}
         </Button>
-        {error && <p className="text-red-500 mt-2">{error}</p>}
+
+        {error && (
+          <div className="flex items-center space-x-2 text-red-400 bg-red-500/10 p-3 rounded-lg border border-red-500/30">
+            <AlertTriangle className="w-5 h-5" />
+            <p>{error}</p>
+          </div>
+        )}
+
         {callStatus && (
-          <div className="mt-4 p-3 bg-gray-100 rounded-md">
-            <p className="font-semibold">Call Status: <span className="font-normal">{callStatus}</span></p>
+          <div className="bg-white/10 backdrop-blur-lg rounded-lg p-3 border border-white/20">
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 rounded-full animate-pulse bg-cyan-400"></div>
+              <p className="text-gray-300">
+                Call Status: <span className="text-white">{callStatus}</span>
+              </p>
+            </div>
           </div>
         )}
+
         {otpCode && (
-          <div className="mt-4 p-3 bg-green-100 rounded-md">
-            <p className="font-semibold">OTP Code: <span className="font-normal">{otpCode}</span></p>
+          <div className="bg-green-500/10 backdrop-blur-lg rounded-lg p-3 border border-green-500/30 flex items-center space-x-2">
+            <ShieldCheck className="w-5 h-5 text-green-400" />
+            <p className="text-green-300">
+              OTP Code: <span className="text-white font-bold">{otpCode}</span>
+            </p>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
