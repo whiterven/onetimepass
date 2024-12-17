@@ -1,44 +1,42 @@
 'use client';
 
 import { useState } from 'react';
-import { 
-  BarChart2, 
-  Phone, 
-  CreditCard, 
-  Users, 
-  Clock, 
-  CheckCircle, 
+import {
+  BarChart2,
+  Phone,
+  CreditCard,
+  Users,
+  Clock,
+  CheckCircle,
   XCircle,
   TrendingUp,
-  TrendingDown
+  TrendingDown,
 } from 'lucide-react';
 import OneCaller from '@/components/OneCaller';
 import { Button } from '@/components/ui/button';
 import { DashboardHeader } from '../../components/DashboardHeader';
 
-const DashboardCard = ({ 
-  icon: Icon, 
-  title, 
-  value, 
-  trend, 
+const DashboardCard = ({
+  icon: Icon,
+  title,
+  value,
+  trend,
   trendColor,
-  trendIcon: TrendIcon
-}: { 
-  icon: React.ElementType, 
-  title: string, 
-  value: string, 
-  trend?: string, 
-  trendColor?: string,
-  trendIcon?: React.ElementType
+  trendIcon: TrendIcon,
+}: {
+  icon: React.ElementType;
+  title: string;
+  value: string;
+  trend?: string;
+  trendColor?: string;
+  trendIcon?: React.ElementType;
 }) => (
   <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 p-6 transform transition-all duration-500 hover:scale-105 hover:shadow-xl">
     <div className="flex justify-between items-center mb-4">
       <Icon className="w-8 h-8 text-cyan-400" />
       <div className="flex items-center space-x-1">
         {TrendIcon && <TrendIcon className={`w-4 h-4 ${trendColor}`} />}
-        <span className={`text-sm font-medium ${trendColor}`}>
-          {trend || ''}
-        </span>
+        <span className={`text-sm font-medium ${trendColor}`}>{trend || ''}</span>
       </div>
     </div>
     <h3 className="text-gray-300 text-sm mb-2">{title}</h3>
@@ -116,7 +114,7 @@ export default function UserDashboard() {
               </h2>
             </div>
             <div className="grid md:grid-cols-3 gap-6">
-              <DashboardCard 
+              <DashboardCard
                 icon={Phone}
                 title="Total OTP Calls"
                 value="42"
@@ -124,7 +122,7 @@ export default function UserDashboard() {
                 trendColor="text-green-500"
                 trendIcon={TrendingUp}
               />
-              <DashboardCard 
+              <DashboardCard
                 icon={Users}
                 title="Unique Users"
                 value="157"
@@ -132,7 +130,7 @@ export default function UserDashboard() {
                 trendColor="text-green-500"
                 trendIcon={TrendingUp}
               />
-              <DashboardCard 
+              <DashboardCard
                 icon={Clock}
                 title="Avg Call Duration"
                 value="27 sec"
@@ -203,21 +201,25 @@ export default function UserDashboard() {
           {[
             { key: 'otp', label: 'OTP Verification', icon: Phone },
             { key: 'billing', label: 'Billing', icon: CreditCard },
-            { key: 'usage', label: 'Usage', icon: BarChart2 }
+            { key: 'usage', label: 'Usage', icon: BarChart2 },
           ].map((tab) => (
             <Button
               key={tab.key}
               onClick={() => setActiveTab(tab.key as 'otp' | 'billing' | 'usage')}
               className={`
-                flex items-center space-x-2 
-                ${activeTab === tab.key 
-                  ? 'bg-gradient-to-r from-cyan-500 to-purple-600' 
-                  : 'bg-white/10 hover:bg-white/20'}
+                flex items-center space-x-2
+                ${
+                  activeTab === tab.key
+                    ? 'bg-gradient-to-r from-cyan-500 to-purple-600'
+                    : 'bg-white/10 hover:bg-white/20'
+                }
                 backdrop-blur-lg
                 transition-all duration-300
+                md:px-4 md:py-2
+                px-2 py-1 text-sm md:text-base
               `}
             >
-              <tab.icon className="w-5 h-5" />
+              <tab.icon className="w-4 h-4 md:w-5 md:h-5" />
               <span>{tab.label}</span>
             </Button>
           ))}
