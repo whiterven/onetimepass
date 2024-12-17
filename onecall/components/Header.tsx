@@ -80,7 +80,7 @@ export function Header() {
           
           {/* Website Name */}
           <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-600">
-            One Caller OTP
+            OneCaller
           </span>
         </Link>
         
