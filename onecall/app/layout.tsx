@@ -1,16 +1,16 @@
+// app/layout.tsx
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import { ClerkProvider } from '@clerk/nextjs'
-
+import { Providers } from './providers'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'One Caller OTP System',
-  description: 'Secure OTP verification via phone calls',
+  title: 'One Caller System',
+  description: 'Secure verification via phone calls',
 }
 
 export default function RootLayout({
@@ -19,15 +19,14 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider>
     <html lang="en">
       <body className={`${inter.className} bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 min-h-screen`}>
-        {children}
+        <Providers>
+          {children}
+        </Providers>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
-    <Analytics/>
-    <SpeedInsights/>
-    </ClerkProvider>
   )
 }
-

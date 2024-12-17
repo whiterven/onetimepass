@@ -26,7 +26,7 @@ export function CountryCodeSelector({
         setCountryCodes(sortedData);
 
         // Find and select the USA by default
-        const usCountry = sortedData.find((country: CountryCode) => country.code === 'GH');
+        const usCountry = sortedData.find((country: CountryCode) => country.code === 'US');
         if (usCountry) {
           setSelectedCountry(usCountry);
           onSelect(usCountry.dial_code);

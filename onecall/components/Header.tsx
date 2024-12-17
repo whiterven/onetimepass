@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Home, HelpCircle, CreditCard, LogIn, UserPlus, Menu, X } from 'lucide-react';
-import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,6 +16,7 @@ export function Header() {
           variant="ghost" 
           className="hover:bg-white/10 transition-all duration-300 flex items-center space-x-2 w-full"
           asChild
+          onClick={() => setIsMenuOpen(false)}
         >
           <Link href="/" className="flex items-center">
             <Home className="w-4 h-4 mr-2" />
@@ -29,6 +29,7 @@ export function Header() {
           variant="ghost" 
           className="hover:bg-white/10 transition-all duration-300 flex items-center space-x-2 w-full"
           asChild
+          onClick={() => setIsMenuOpen(false)}
         >
           <Link href="/help" className="flex items-center">
             <HelpCircle className="w-4 h-4 mr-2" />
@@ -41,6 +42,7 @@ export function Header() {
           variant="ghost" 
           className="hover:bg-white/10 transition-all duration-300 flex items-center space-x-2 w-full"
           asChild
+          onClick={() => setIsMenuOpen(false)}
         >
           <Link href="/pricing" className="flex items-center">
             <CreditCard className="w-4 h-4 mr-2" />
@@ -91,14 +93,13 @@ export function Header() {
           </ul>
 
           {/* Authentication Buttons */}
-          <SignedOut>
             <div className="hidden md:flex space-x-2">
               <Button 
                 variant="outline" 
                 className="text-purple-600 border-cyan-400 hover:bg-cyan-500 hover:to-purple-700"
                 asChild
               >
-                <Link href="/sign-in" className="flex items-center">
+                <Link href="/signin" className="flex items-center">
                   <LogIn className="w-4 h-4 mr-2" />
                   Sign In
                 </Link>
@@ -108,24 +109,13 @@ export function Header() {
                 className="bg-gradient-to-r from-cyan-400 to-purple-600 hover:from-cyan-500 hover:to-purple-700"
                 asChild
               >
-                <Link href="/sign-up" className="flex items-center">
+                <Link href="/signup" className="flex items-center">
                   <UserPlus className="w-4 h-4 mr-2" />
                   Sign Up
                 </Link>
               </Button>
             </div>
-          </SignedOut>
-          
-          {/* User Profile Button */}
-          <SignedIn>
-            <UserButton 
-              appearance={{
-                elements: {
-                  userButtonAvatarBox: 'w-10 h-10'
-                }
-              }}
-            />
-          </SignedIn>
+
 
           {/* Mobile Hamburger Menu */}
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
@@ -136,7 +126,6 @@ export function Header() {
             </SheetTrigger>
             <SheetContent side="right" className="bg-[#112240] text-white border-l border-white/10">
               <div className="flex flex-col space-y-4 mt-8">
-                <SignedOut>
                   <div className="flex flex-col space-y-2">
                     <Button 
                       variant="outline" 
@@ -144,7 +133,7 @@ export function Header() {
                       asChild
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <Link href="/sign-in" className="flex items-center">
+                      <Link href="/signin" className="flex items-center">
                         <LogIn className="w-4 h-4 mr-2" />
                         Sign In
                       </Link>
@@ -155,13 +144,12 @@ export function Header() {
                       asChild
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <Link href="/sign-up" className="flex items-center">
+                      <Link href="/signup" className="flex items-center">
                         <UserPlus className="w-4 h-4 mr-2" />
                         Sign Up
                       </Link>
                     </Button>
                   </div>
-                </SignedOut>
 
                 <ul className="space-y-2">
                   <NavLinks />

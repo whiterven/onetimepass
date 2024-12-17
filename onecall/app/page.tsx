@@ -1,3 +1,5 @@
+//app/page.tsx
+
 import { Header } from '../components/Header'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
@@ -64,7 +66,7 @@ export default function Home() {
                 className="bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 flex items-center space-x-2"
                 asChild
               >
-                <Link href="/dashboard" className="flex items-center">
+                <Link href="/signin" className="flex items-center">
                   <Zap className="w-5 h-5 mr-2" />
                   Get Started
                 </Link>
