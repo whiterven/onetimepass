@@ -24,23 +24,21 @@ export function CountryCodeSelector({
       .then(data => {
         const sortedData = data.sort((a: CountryCode, b: CountryCode) => a.name.localeCompare(b.name));
         setCountryCodes(sortedData);
-      });
-  }, []);
 
-  useEffect(() => {
-    // Find and select the default country *after* countryCodes is populated.
-    const usCountry = countryCodes.find((country: CountryCode) => country.code === 'US');
-    if (usCountry) {
-      setSelectedCountry(usCountry);
-      onSelect(usCountry.dial_code);
-    }
-  }, [countryCodes, onSelect]); // onSelect is now correctly included here because it's used inside the useEffect
+        // Find and select the USA by default
+        const usCountry = sortedData.find((country: CountryCode) => country.code === 'GH');
+        if (usCountry) {
+          setSelectedCountry(usCountry);
+          onSelect(usCountry.dial_code);
+        }
+      });
+  }, [onSelect]);
 
   const handleValueChange = (value: string) => {
     const country = countryCodes.find(c => c.dial_code === value);
     if (country) {
       setSelectedCountry(country);
-      onSelect(value);
+      onSelect(country.dial_code);
     }
   };
 
@@ -58,7 +56,7 @@ export function CountryCodeSelector({
                 svg
                 style={{ width: '1.5em', height: '1.5em' }}
               />
-              <span>{selectedCountry.dial_code}</span>
+              <span>{selectedCountry.name} ({selectedCountry.dial_code})</span>
             </div>
           )}
         </SelectValue>

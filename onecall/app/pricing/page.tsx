@@ -1,11 +1,8 @@
 'use client'
 
-import { useState } from 'react'
 import { Header } from '../../components/Header'
 import { Button } from '@/components/ui/button'
 import { CreditCard, Check, Bitcoin, Wallet } from 'lucide-react'
-//import Link from 'next/link'
-import { CryptoPaymentModal } from '@/components/CryptoPaymentModal'
 
 // Define the type for a single plan
 interface Plan {
@@ -16,10 +13,7 @@ interface Plan {
 }
 
 export default function PricingPage() {
-  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null); // Specify the type here
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-
-  const plans: Plan[] = [ // Specify the type here
+  const plans: Plan[] = [
     {
       name: 'Starter',
       price: 6,
@@ -52,11 +46,6 @@ export default function PricingPage() {
     }
   ];
 
-  const handlePurchase = (plan: Plan) => { // Specify the type here
-    setSelectedPlan(plan);
-    setIsPaymentModalOpen(true);
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0a192f] via-[#112240] to-[#0a192f] text-white overflow-hidden relative">
       {/* Animated background effects */}
@@ -82,7 +71,7 @@ export default function PricingPage() {
             </div>
             
             <p className="text-xl max-w-2xl mx-auto text-gray-300 leading-relaxed">
-              Flexible, transparent pricing for secure OTP authentication. Pay with Bitcoin or USDT.
+              Flexible, transparent pricing for secure OTP authentication.
             </p>
           </div>
 
@@ -111,42 +100,23 @@ export default function PricingPage() {
                 </ul>
                 
                 <Button 
-                  onClick={() => handlePurchase(plan)}
                   className="w-full bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 flex items-center justify-center"
                 >
                   <Bitcoin className="w-5 h-5 mr-2" />
-                  Purchase Plan
+                  Select Plan
                 </Button>
               </div>
             ))}
           </div>
 
-          {/* Cryptocurrency Payment Modal */}
-          <CryptoPaymentModal
-            plan={selectedPlan?.name || ''}
-            amount={selectedPlan?.price || 0}
-            isOpen={isPaymentModalOpen}
-            onClose={() => setIsPaymentModalOpen(false)}
-          />
-
           {/* Payment Information Section */}
           <div className="text-center space-y-6">
             <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-600">
-              Flexible Cryptocurrency Payments
+              Pricing Plans
             </h2>
             <p className="text-xl max-w-2xl mx-auto text-gray-300 leading-relaxed">
-              We accept Bitcoin and USDT for all our pricing plans. Secure, fast, and convenient payment methods.
+              Choose the plan that best fits your authentication needs.
             </p>
-            <div className="flex justify-center space-x-4">
-              <div className="flex items-center bg-white/10 backdrop-blur-lg rounded-xl p-4">
-                <Bitcoin className="w-12 h-12 text-orange-500 mr-4" />
-                <span className="text-white">Bitcoin</span>
-              </div>
-              <div className="flex items-center bg-white/10 backdrop-blur-lg rounded-xl p-4">
-                <Wallet className="w-12 h-12 text-cyan-400 mr-4" />
-                <span className="text-white">USDT</span>
-              </div>
-            </div>
           </div>
         </main>
 

@@ -64,12 +64,29 @@ export async function POST(req: NextRequest) {
       twiml: response.toString()
     });
 
-    // Store the call SID in Redis for later retrieval
-    await redis.set(`call:${call.sid}`, JSON.stringify({ phoneNumber, status: call.status }), { ex: 3600 });
+    // Store the call information in Redis with more detailed logging
+    await redis.set(`call:${call.sid}`, JSON.stringify({ 
+      phoneNumber, 
+      status: call.status,
+      createdAt: new Date().toISOString()
+    }), { ex: 3600 });
 
-    return NextResponse.json({ callSid: call.sid, status: call.status });
+    // Log the call SID for easier debugging
+    console.log(`Call initiated. Call SID: ${call.sid}, Phone Number: ${phoneNumber}`);
+
+    return NextResponse.json({ 
+      callSid: call.sid, 
+      status: call.status,
+      debugInfo: {
+        phoneNumber,
+        createdAt: new Date().toISOString()
+      }
+    });
   } catch (error) {
     console.error('Error initiating call:', error);
-    return NextResponse.json({ error: 'Failed to initiate call' }, { status: 500 });
+    return NextResponse.json({ 
+      error: 'Failed to initiate call', 
+      details: error instanceof Error ? error.message : 'Unknown error' 
+    }, { status: 500 });
   }
 }
